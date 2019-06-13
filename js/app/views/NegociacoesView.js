@@ -23,8 +23,7 @@
 
 				      return `
 				        <tr>
-				            <td>`var_dump(${DateHelper.dataParaTexto(n.data)});
-				            die();`</td>
+				            <td>${DateHelper.dataParaTexto(n.data)}</td>
 				            <td>${n.quantidade}</td>
 				            <td>${n.valor}</td>
 				            <td>${n.volume}</td>
