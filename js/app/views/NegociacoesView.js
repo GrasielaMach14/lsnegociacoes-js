@@ -1,10 +1,10 @@
-	class NegociacoesView{
-		//O constructor receberá um elemento do DOM para associar parte do HTML ao js
-		constructor(elemento){
-
-			this._elemento = elemento;
-		}
-
+	class NegociacoesView extends View {
+		//O construtor chamará o super() - fazendo referência ao super class, a classe pai
+		constructor(elemento) {
+        
+        	super(elemento);
+    	
+    	}
 		_template(model){ //Retornará uma template string de uma tabela HTML 
 
 			return ` 
@@ -19,29 +19,27 @@
 		        </thead>
 		        
 		        <tbody>
-		        	${model.negociacoes.map(n => {
-
-				      return `
+		        	${model.negociacoes.map(n =>`
 				        <tr>
 				            <td>${DateHelper.dataParaTexto(n.data)}</td>
 				            <td>${n.quantidade}</td>
 				            <td>${n.valor}</td>
 				            <td>${n.volume}</td>
 				        </tr>
-				      `
-				      })}
+				      `).join('')}
 		        </tbody>
 		        
 		        <tfoot>
+		        	<td colspan="3"></td>
+		        	<td>
+		        		${ //A função reduce irá processar o array e depois dispor um único resultado, deixando o código mais enxuto, tbm é usado o arrow functions
+		        			model.negociacoes.reduce((total, n) => total += n.volume, 0.0)
+		        		 }
+		        	</td>
 		        </tfoot>
     		</table>
     		`;
 
 		}
-		//O innerHTML será responsável por converter as strings em elementos do DOM. Isto será inserido com filho da <div>
-		update(model){ //O model solicita a View para que se renderize com o novo modelo da negociação
-
-			this._elemento.innerHTML = this._template(model);
-
-		}
+		
 	}

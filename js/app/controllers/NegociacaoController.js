@@ -8,7 +8,10 @@
 			this._inputValor = $('#valor');
 			this._listaNegociacoes = new ListaNegociacoes();//Adiciona o atributo que irá adicionar lista de negociações
 			this._negociacoesView = new NegociacoesView($('#negociacoesView'));//Cria propriedade negociacoesView e chama a classe, tbm fará a busca do id no HTML
-
+			this._mensagem = new Mensagem();//É criada a variável mensagem chamando a classe do model
+			this._mensagemView = new MensagemView($('#mensagemView'));//É declarada a View nesta classe
+			
+			this._mensagemView.update(this._mensagem);
 			this._negociacoesView.update(this._listaNegociacoes);//Após a criação de NegociacoesView chamará update p a tabela aparecer dentro da View, usa no parâmetro a lista para tazer os dados para dentro da tabela
 		}
 
@@ -16,6 +19,8 @@
 			
 			event.preventDefault();
 			this._listaNegociacoes.adiciona(this._criaNegociacao());//Chamar a função que irá cadastrar lista de negociações
+			this._mensagem.texto = 'Negociação adicionada com sucesso.';
+			this._mensagemView.update(this._mensagem);
 			this._negociacoesView.update(this._listaNegociacoes);
 			this._limpaFormulario();
 
