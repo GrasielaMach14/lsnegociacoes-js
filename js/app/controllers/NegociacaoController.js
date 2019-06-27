@@ -32,6 +32,16 @@
 
 		}
 
+		apaga(){ //Este método será chamado no botão Apagar do index  
+
+			this._listaNegociacoes.esvazia();//Chama o método esvazia() na classe ListaNegociacoes para esvaziar o modelo
+			this._negociacoesView.update(this._listaNegociacoes);//Atualiza a lista
+
+			this._mensagem.texto = 'Negociações apagadas com sucesso.';//Apresenta a mensagem
+			this._mensagemView.update(this._mensagem);//Atualiza o modelo da mensagem
+
+		}
+
 		_criaNegociacao(){
 
 			return new Negociacao(
