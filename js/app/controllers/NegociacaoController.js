@@ -6,17 +6,21 @@
 			this._inputData = $('#data');//a entrada desta variável data esta em formato de String e não de data
 			this._inputQuantidade = $('#quantidade');//Usando a convenção _ indica que não pode ser acessado estes dados
 			this._inputValor = $('#valor');
-			//Adiciona o atributo que irá adicionar lista de negociações, o this funciona como contexto do NegociacaoController
-			this._listaNegociacoes = new ListaNegociacoes(this, function(model){// adicionar o function() dentro de new ListaNegociacao e passar uma função anônima como parâmetro, através do model passrá o modelo do adiciona e esvazia
-				
-				this._negociacoesView.update(model);//Após a criação de NegociacoesView chamará update p a tabela aparecer dentro da View, usa no parâmetro a lista para tazer os dados para dentro da tabela
-
-			});
-			this._negociacoesView = new NegociacoesView($('#negociacoesView'));//Cria propriedade negociacoesView e chama a classe, tbm fará a busca do id no HTML
-			this._mensagem = new Mensagem();//É criada a variável mensagem chamando a classe do model
-			this._mensagemView = new MensagemView($('#mensagemView'));//É declarada a View nesta classe
 			
+   	   	    this.ListaNegociacoes = ProxyFactory.create( //Adiciona uma _listaNegociacoes com o ProxyFactory
+	  	   						new ListaNegociacoes(), 
+	  	   						['adiciona','esvazia'], (model) =>
+  	   							this._negociacoesView.update(model));
+			
+			this._negociacoesView = new NegociacoesView($('#negociacoesView'));//Cria propriedade negociacoesView e chama a classe, tbm fará a busca do id no HTML
+			//this._negociacoesView.update(this._listaNegociacoes);
+
+			this._mensagem = ProxyFactory.create(
+						    new Mensagem(), ['texto'], model =>
+						    this._mensagemView.update(model));			
+			this._mensagemView = new MensagemView($('#mensagemView'));//É declarada a View nesta classe
 			this._mensagemView.update(this._mensagem);
+			
 			
 		}
 
@@ -25,8 +29,6 @@
 			event.preventDefault();
 			this._listaNegociacoes.adiciona(this._criaNegociacao());//Chamar a função que irá cadastrar lista de negociações
 			this._mensagem.texto = 'Negociação adicionada com sucesso.';
-			this._mensagemView.update(this._mensagem);
-			//this._negociacoesView.update(this._listaNegociacoes);
 			this._limpaFormulario();
 
 			/**
@@ -41,9 +43,6 @@
 
 			this._listaNegociacoes.esvazia();//Chama o método esvazia() na classe ListaNegociacoes para esvaziar o modelo
 			this._negociacoesView.update(this._listaNegociacoes);//Atualiza a lista
-
-			this._mensagem.texto = 'Negociações apagadas com sucesso.';//Apresenta a mensagem
-			//this._mensagemView.update(this._mensagem);//Atualiza o modelo da mensagem
 
 		}
 
@@ -64,3 +63,5 @@
 			this._inputData.focus();
 		}
 	}
+
+	
