@@ -7,22 +7,16 @@
 			this._inputQuantidade = $('#quantidade');//Usando a convenção _ indica que não pode ser acessado estes dados
 			this._inputValor = $('#valor');
 			
-   	   	    this.ListaNegociacoes = ProxyFactory.create( //Adiciona uma _listaNegociacoes com o ProxyFactory
-	  	   						new ListaNegociacoes(), 
-	  	   						['adiciona','esvazia'], (model) =>
-  	   							this._negociacoesView.update(model));
-			
-			this._negociacoesView = new NegociacoesView($('#negociacoesView'));//Cria propriedade negociacoesView e chama a classe, tbm fará a busca do id no HTML
-			//this._negociacoesView.update(this._listaNegociacoes);
+   	   	    this._listaNegociacoes = new Bind( //Bind é instanciado para receber o modelo, a View e a condição 
+   	   	    						new ListaNegociacoes(), 
+   	   	    						new NegociacoesView($('#negociacoesView')), 
+   	   	    						'adiciona', 'esvazia');
 
-			this._mensagem = ProxyFactory.create(
-						    new Mensagem(), ['texto'], model =>
-						    this._mensagemView.update(model));			
-			this._mensagemView = new MensagemView($('#mensagemView'));//É declarada a View nesta classe
-			this._mensagemView.update(this._mensagem);
-			
-			
-		}
+			this._mensagem = new Bind( //O bind deve trazer o proxy já configurado para NegociacaoController
+							new Mensagem(), 
+							new MensagemView($('#mensagemView')), 
+							'texto');
+			}
 
 		adiciona(event){
 			
@@ -30,20 +24,33 @@
 			this._listaNegociacoes.adiciona(this._criaNegociacao());//Chamar a função que irá cadastrar lista de negociações
 			this._mensagem.texto = 'Negociação adicionada com sucesso.';
 			this._limpaFormulario();
+		}
 
-			/**
-			console.log(this._listaNegociacoes.negociacoes);
-			//console.log(DateHelper.textoParaData(this._inputData.value));
-			console.log(typeof(this._inputData.value));//testa o tipo da variável(string, float ou int...) 
-			console.log(this._inputData.value);**/
+		importarNegociacoes(){
 
+			let xhr = new XMLHttpRequest(); //A variável é uma instância de new XMLHttpRequest()
+			
+			xhr.open('GET', 'negociacoes/semana'); //O método open() recebeu dois parâmetros: o primeiro especifica o tipo de requisição a ser realizada(GET), o segundo é o endereço (negociacoes/semana)
+			
+			xhr.onreadystatechange = () => {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						JSON.parse(xhr.responseText)
+						.map( objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor)) //teremos que converter o JSON, fazendo o parse() e para cada item do array, teremos que criar uma negociação. P/ realizarmos esta ação, usaremos a função map() q varrerá o array e criará um novo com modificações
+						.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao)); //para cada item teremos um negociação						
+					}else{
+						console.log(xhr.responseTxt); //xhr.responseText é um texto
+						this._mensagem.texto = "Não foi possível obter as negociações da semana.";
+					}
+				}
+			}
+			xhr.send(); //Realiza a execução da requisição
 		}
 
 		apaga(){ //Este método será chamado no botão Apagar do index  
 
 			this._listaNegociacoes.esvazia();//Chama o método esvazia() na classe ListaNegociacoes para esvaziar o modelo
 			this._negociacoesView.update(this._listaNegociacoes);//Atualiza a lista
-
 		}
 
 		_criaNegociacao(){
