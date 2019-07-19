@@ -33,6 +33,45 @@
         <button class="btn btn-primary" type="submit">Incluir</button>
     </form>
     
+    <script>
+       /* function sendPost(event){
+
+            event.preventDefault();
+            console.log("Enviando Post");
+
+            let $ = document.querySelector.bind(document);
+            inputData = $('#data');
+            inputQuantidade = $('#quantidade');
+            inputValor = $('#valor');
+
+            let negociacao = { 
+                data: inputData.value, 
+                quantidade: inputQuantidade.value, 
+                valor: inputValor.value
+            };
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "negociacoes", true);
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.onreadystatechange = () => {
+                if(readyState == 4){
+
+                    if(xhr.status == 200){
+                        inputData.value = '';
+                        inputQuantidade.value = 1;
+                        inputValor.value = 0.0;
+                        inputData.focus();
+                        alert('Negociação enviada com sucesso!');
+                    }else{
+                        alert('Não foi possível enviar a negociação.');
+                    }
+                }
+            }
+            xhr.send(JSON.stringify(negociacao));
+
+        }*/
+    </script>    
+
     <div class="text-center">
         <button onclick="negociacaoController.importarNegociacoes()" class="btn btn-primary text-center" type="button">
             Importar Negociações
@@ -56,6 +95,8 @@
     <script src="js/app/models/Mensagem.js"></script>
     <script src="js/app/services/ProxyFactory.js"></script>
     <script src="js/app/helpers/Bind.js"></script>
+    <script src="js/app/services/NegociacaoService.js"></script>
+    <script src="js/app/services/HttpService.js"></script> 
 
     <script>
         let negociacaoController = new NegociacaoController();

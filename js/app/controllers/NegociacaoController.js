@@ -28,23 +28,21 @@
 
 		importarNegociacoes(){
 
-			let xhr = new XMLHttpRequest(); //A variável é uma instância de new XMLHttpRequest()
-			
-			xhr.open('GET', 'negociacoes/semana'); //O método open() recebeu dois parâmetros: o primeiro especifica o tipo de requisição a ser realizada(GET), o segundo é o endereço (negociacoes/semana)
-			
-			xhr.onreadystatechange = () => {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						JSON.parse(xhr.responseText)
-						.map( objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor)) //teremos que converter o JSON, fazendo o parse() e para cada item do array, teremos que criar uma negociação. P/ realizarmos esta ação, usaremos a função map() q varrerá o array e criará um novo com modificações
-						.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao)); //para cada item teremos um negociação						
-					}else{
-						console.log(xhr.responseTxt); //xhr.responseText é um texto
-						this._mensagem.texto = "Não foi possível obter as negociações da semana.";
-					}
-				}
-			}
-			xhr.send(); //Realiza a execução da requisição
+			let service = new NegociacaoService();
+
+			Promise.all([ //Recebe uma array com os diversos promises, serão exibidos na sequência ordenada e receberá a lista de promises dentro de um array []
+				service.obterNegociacaoSemanal(), //método obterNegociacoesDaSemana() devolve uma promessa de que tentará obter os dados, se for cumprida  receberá lista de negociações
+				service.obterNegociacaoSemanaAnterior(), 
+				service.obterNegociacaoSemanaRetrasada()]
+			).then(   						//then é o método da promise, e se a promessa for cumprida, receberemos a lista de negociação e, com esta, poderemos fazer o forEach()
+				negociacoes => {
+					negociacoes 	//Reduce irá transformar um conjunto de arrays negociações em um só
+					.reduce((arrayAchatado, array) => arrayAchatado.concat(array), []) //Recebe dois parâmetros o array reduzido em 1 só será concatenado em arrayAchatado
+					.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao)); //Cada posição do array será uma lista de negociações, por isso utiliza o forEach
+					this._mensagem.texto = "Negociações importadas com sucesso.";		
+					})
+					.catch(error => this._mensagem.texto = error);  //Caso ocorrer um erro, vamos encadear uma função catch() na promise
+					// Estamos aplicando um padrão que vem do mundo NodeJS, e que recebe o nome de Error-First-Callback.
 		}
 
 		apaga(){ //Este método será chamado no botão Apagar do index  

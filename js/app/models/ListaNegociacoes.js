@@ -24,4 +24,10 @@
 			this._negociacoes = [];
 						
 		}
+
+		get volumeTotal(){ ////A função reduce irá processar o array e depois dispor um único resultado, deixando o código mais enxuto, tbm é usado o arrow functions
+
+			return this._negociacoes.reduce((total, n) => total + n.volume, 0.0);
+
+		}
 	}
