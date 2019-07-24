@@ -11,10 +11,10 @@
 			<table class="table table-hover table-bordered">
 		        <thead>
 		            <tr>
-		                <th>DATA</th>
-		                <th>QUANTIDADE</th>
-		                <th>VALOR</th>
-		                <th>VOLUME</th>
+		                <th onclik="negociacaoController.ordena('data')">DATA</th>
+		                <th onclik="negociacaoController.ordena('quantidade')">QUANTIDADE</th>
+		                <th onclik="negociacaoController.ordena('valor')">VALOR</th>
+		                <th onclik="negociacaoController.ordena('volume')">VOLUME</th>
 		            </tr>
 		        </thead>
 		        

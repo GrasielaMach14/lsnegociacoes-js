@@ -10,12 +10,14 @@
    	   	    this._listaNegociacoes = new Bind( //Bind é instanciado para receber o modelo, a View e a condição 
    	   	    						new ListaNegociacoes(), 
    	   	    						new NegociacoesView($('#negociacoesView')), 
-   	   	    						'adiciona', 'esvazia');
+   	   	    						'adiciona','esvazia','ordena', 'inverterOrdem');
 
 			this._mensagem = new Bind( //O bind deve trazer o proxy já configurado para NegociacaoController
 							new Mensagem(), 
 							new MensagemView($('#mensagemView')), 
 							'texto');
+			this._ordemAtual = ''; // quando a página for carregada, não tem critério. Só passa a ter quando ele começa a clicar nas colunas
+    		
 			}
 
 		adiciona(event){
@@ -45,10 +47,27 @@
 					// Estamos aplicando um padrão que vem do mundo NodeJS, e que recebe o nome de Error-First-Callback.
 		}
 
+
 		apaga(){ //Este método será chamado no botão Apagar do index  
 
 			this._listaNegociacoes.esvazia();//Chama o método esvazia() na classe ListaNegociacoes para esvaziar o modelo
 			this._negociacoesView.update(this._listaNegociacoes);//Atualiza a lista
+		}
+
+		ordena(coluna){
+
+			if(this._ordemAtual==coluna){
+
+				this._listaNegociacoes.inverterOrdem();
+
+			}else{
+
+				this._listaNegociacoes.ordena((a, b) => a[coluna] - b[coluna]);
+
+			}
+
+			this._ordemAtual = coluna;
+
 		}
 
 		_criaNegociacao(){

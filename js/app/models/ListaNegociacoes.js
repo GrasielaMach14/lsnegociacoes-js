@@ -13,6 +13,18 @@
 						
 		}
 
+		ordena(criterio){ // O critério de ordenação da propriedade é escolhida pelo usuário
+
+			this._negociacoes.sort(criterio);
+
+		}
+
+		inverterOrdem(){
+
+			this._negociacoes.reverse();
+			
+		}
+
 		get negociacoes(){
 
 			 return [].concat(this._negociacoes); //Ao passarmos o this._negociacoes dentro do concat(), o retorno será uma nova lista, um novo array, isso não permite que alguém manipule o código utilizando o push e criando uma outra lista ñ permitida

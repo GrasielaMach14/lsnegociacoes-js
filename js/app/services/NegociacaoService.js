@@ -14,9 +14,9 @@
 
 	            this.http
 	                .get('negociacoes/semana')
-	                .then(negociacoes => {
+	                .then(negociacoes => { //o then dá acesso ao resultado da função
 	                    resolve(negociacoes.map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor)));
-	                })
+	                }) //o valor passado para resolve que estará disponível para a função then
 	                .catch(erro => {
 	                    console.log(erro);
 	                    reject('Não foi possível obter as negociações da semana');
